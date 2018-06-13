@@ -1,0 +1,47 @@
+import pymysql as pm
+
+try:
+    con = pm.connect(host='localhost', database='acadviewdb', user='root', password='ha123456')
+    cursor = con.cursor()
+    query1 = "Select * from Publishers where Publisher_ID=12"
+    cursor.execute(query1)
+    data = cursor.fetchall()
+    for row in data:
+        print('Publisher_ID: {}, Name: {}, Street_Adress: {}, Suite_Number: {}, Zip_Code_ID: {}' \
+              .format(row[0], row[1], row[2], row[3], row[4]))
+
+    query2 = "Update Publishers set Street_Address='Karol Enclave' where Publisher_ID=12"
+    cursor.execute(query2)
+    con.commit()
+
+    print("\nUpdated Table:")
+    query3 = "Select * from Publishers"
+    cursor.execute(query3)
+    d = cursor.fetchall()
+    for row in d:
+        print('Publisher_ID: {}, Name: {}, Street_Adress: {}, Suite_Number: {}, Zip_Code_ID: {}' \
+              .format(row[0], row[1], row[2], row[3], row[4]))
+
+except pm.DatabaseError as e:
+    if con:
+        con.rollback()
+        print('Problem occured: ', e)
+
+finally:
+    if cursor:
+        cursor.close()
+    if con:
+        con.close()
+    print('DONE!!')
+
+output
+
+Publisher_ID: 12, Name: VK Garg, Street_Adress: Old Warriors Colony, Suite_Number: 51, Zip_Code_ID: 2
+
+Updated Table:
+Publisher_ID: 10, Name: AK Gupta, Street_Adress: Vijender Nagar, Suite_Number: 55, Zip_Code_ID: 3
+Publisher_ID: 11, Name: Praful Kumar, Street_Adress: Prasang Vihar, Suite_Number: 53, Zip_Code_ID: 4
+Publisher_ID: 12, Name: VK Garg, Street_Adress: Karol Enclave, Suite_Number: 51, Zip_Code_ID: 2
+Publisher_ID: 13, Name: Rahul Gupta, Street_Adress: Ramvilas Vihar, Suite_Number: 54, Zip_Code_ID: 1
+Publisher_ID: 14, Name: Riya Sen, Street_Adress: Sharol Bagh, Suite_Number: 57, Zip_Code_ID: 5
+DONE!!
